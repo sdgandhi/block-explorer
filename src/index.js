@@ -1,6 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./styles/global/fonts.css";
+import "./styles/global/bootstrap.css";
+import "./styles/global/iconsmind.css";
+import "./styles/global/stack-interface.css";
+import "./styles/global/theme-aqua.css";
+import "./styles/global/custom.css";
 import App from "./App.jsx";
 import * as serviceWorker from "./serviceWorker";
 

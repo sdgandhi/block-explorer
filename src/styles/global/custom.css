@@ -1,0 +1,4 @@
+/* Increase logo size a little bit */
+.bar .logo {
+  max-height: 2.78571429em;
+}

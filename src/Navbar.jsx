@@ -1,8 +1,15 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import logo from "./images/logo.svg";
 import "./styles/Navbar.css";
 
-class Navbar extends PureComponent {
+class Navbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      toggleHamburgerMenu: false
+    };
+  }
+
   render() {
     return (
       <div className="nav-container nav-contrast-border sticky-nav ">
@@ -21,6 +28,11 @@ class Navbar extends PureComponent {
                     href="#"
                     className="hamburger-toggle"
                     data-toggle-class="#menu3;hidden-xs hidden-sm"
+                    onClick={() => {
+                      this.setState(prevState => ({
+                        toggleHamburgerMenu: !prevState.toggleHamburgerMenu
+                      }));
+                    }}
                   >
                     <i className="icon icon--sm stack-interface stack-menu" />
                   </a>
@@ -28,7 +40,12 @@ class Navbar extends PureComponent {
               </div>
             </div>
           </div>
-          <nav className="bar bar--sm" id="menu3">
+          <nav
+            className={`bar bar--sm ${
+              this.state.toggleHamburgerMenu ? "" : "hidden-sm hidden-xs"
+            }`}
+            id="menu3"
+          >
             <div className="container">
               <div className="row">
                 <div className="col-lg-1 hidden-xs hidden-sm order-lg-1">

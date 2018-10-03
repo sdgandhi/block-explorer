@@ -1,3 +1,7 @@
+.nav-container {
+  z-index: 99;
+}
+
 .nav-container.nav-contrast-border {
   background-color: #fff;
   border-bottom: 1px solid lightgray;

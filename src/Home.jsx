@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./App.css";
 
 class Home extends Component {
   constructor(props) {
@@ -9,10 +8,29 @@ class Home extends Component {
 
   render() {
     return (
-      <section className="text-center">
+      <section className="switchable switchable--switch">
         <div className="container">
-          <div className="row">
-            <div className="col-12">Hello World</div>
+          <div className="row justify-content-between">
+            <div className="col-md-6 col-lg-5">
+              <div className="switchable__text">
+                <h2>
+                  Elph Blockchain
+                  <br className="hidden-xs hidden-sm" /> is super fast
+                </h2>
+                <p className="lead">TPS: XXXXX, Block No: XXXX</p>
+              </div>
+              <div className="bg--secondary boxed boxed--border boxed--lg" />
+            </div>
+            <div className="col-md-6">
+              <div className="switchable__text">
+                <h2>
+                  Ethereum
+                  <br className="hidden-xs hidden-sm" /> is slow
+                </h2>
+                <p className="lead">TPS: XXXXX, Block No: XXXX</p>
+              </div>
+              <div className="bg--secondary boxed boxed--border boxed--lg" />
+            </div>
           </div>
         </div>
       </section>

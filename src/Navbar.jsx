@@ -1,63 +1,54 @@
 import React, { PureComponent } from "react";
 import logo from "./images/logo.svg";
+import "./styles/Navbar.css";
 
 class Navbar extends PureComponent {
   render() {
     return (
-      <div className="nav-container">
-        <div>
-          <div className="bar bar--sm visible-xs">
+      <div className="nav-container nav-contrast-border sticky-nav ">
+        <div className="via-1538591159517" via="via-1538591159517" vio="asdf">
+          <div className="bar bar--sm visible-sm visible-xs">
             <div className="container">
               <div className="row">
                 <div className="col-3 col-md-2">
                   <a href="index.html">
-                    {" "}
-                    <img
-                      className="logo logo-dark"
-                      alt="logo"
-                      src={logo}
-                    />{" "}
-                    <img className="logo logo-light" alt="logo" src={logo} />{" "}
+                    <img className="logo logo-dark" alt="logo" src={logo} />
+                    <img className="logo logo-light" alt="logo" src={logo} />
                   </a>
                 </div>
                 <div className="col-9 col-md-10 text-right">
                   <a
-                    href="/"
+                    href="#"
                     className="hamburger-toggle"
-                    data-toggle-class="#menu1;hidden-xs hidden-sm"
+                    data-toggle-class="#menu3;hidden-xs hidden-sm"
                   >
-                    {" "}
-                    <i className="icon icon--sm stack-interface stack-menu" />{" "}
+                    <i className="icon icon--sm stack-interface stack-menu" />
                   </a>
                 </div>
               </div>
             </div>
           </div>
-          <nav id="menu1" className="bar bar-1 hidden-xs">
+          <nav className="bar bar--sm" id="menu3">
             <div className="container">
               <div className="row">
-                <div className="col-lg-1 col-md-2 hidden-xs">
+                <div className="col-lg-1 hidden-xs hidden-sm order-lg-1">
                   <div className="bar__module">
                     <a href="index.html">
-                      {" "}
-                      <img
-                        className="logo logo-dark"
-                        alt="logo"
-                        src={logo}
-                      />{" "}
-                      <img className="logo logo-light" alt="logo" src={logo} />{" "}
+                      <img className="logo logo-dark" alt="logo" src={logo} />
+                      <img className="logo logo-light" alt="logo" src={logo} />
                     </a>
                   </div>
                 </div>
-                <div className="col-lg-11 col-md-12 text-right text-left-xs text-left-sm">
+                <div className="col-lg-6 offset-lg-2 order-lg-4">
                   <div className="bar__module">
-                    <a
-                      className="btn btn--sm btn--primary type--uppercase"
-                      href="/"
-                    >
+                    <form>
                       {" "}
-                      <span className="btn__text">Buy Now</span>{" "}
-                    </a>
+                      <input
+                        type="search"
+                        placeholder="Search site"
+                        name="query"
+                      />{" "}
+                    </form>
                   </div>
                 </div>
               </div>

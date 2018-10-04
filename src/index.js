@@ -7,13 +7,37 @@ import "./styles/global/stack-interface.css";
 import "./styles/global/theme-aqua.css";
 import "./styles/global/custom.css";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App.jsx";
+import { createStore, applyMiddleware, compose } from "redux";
+import { Provider } from "react-redux";
+import createSagaMiddleware from "redux-saga";
 import * as serviceWorker from "./serviceWorker";
+import App from "./components/App.jsx";
+import rootReducer from "./redux/rootReducer";
+import runSagas from "./redux/sagas";
+
+// Setup Redux store and sagas.
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(sagaMiddleware),
+    /**
+     * Conditionally add the Redux DevTools extension enhancer
+     * if it is installed.
+     */
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  )
+);
+
+runSagas(sagaMiddleware);
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );
 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./styles/Block.css";
+import "../styles/Block.css";
 import { Link } from "react-router-dom";
 
 class Block extends Component {

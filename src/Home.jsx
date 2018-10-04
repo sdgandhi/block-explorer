@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { CSSTransitionGroup } from "react-transition-group";
+import Block from "./Block.jsx";
 import "./styles/Home.css";
 
 class Home extends Component {
@@ -12,12 +13,85 @@ class Home extends Component {
         {
           number: 12345,
           hash:
-            "0xd8cfcdbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6"
+            "0xd8cfcdbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6",
+          transactions: [
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            },
+            {
+              hash: "0xasdf"
+            }
+          ]
         },
         {
           number: 87654,
           hash:
-            "0xd8cfcdbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6"
+            "0xd8cfcdbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6",
+          transactions: [
+            {
+              hash: "0xasdf"
+            }
+          ]
         }
       ]
     };
@@ -30,7 +104,7 @@ class Home extends Component {
       <section className="switchable switchable--switch">
         <div className="container">
           <div className="row justify-content-between">
-            <div className="col-md-6 col-lg-5">
+            <div className="col-6">
               <div className="switchable__text">
                 <a
                   href="#"
@@ -38,7 +112,15 @@ class Home extends Component {
                   data-toggle-class="#menu3;hidden-xs hidden-sm"
                   onClick={() => {
                     const old = that.state.blocks;
-                    old.unshift({ number: 452435, hash: "0xwefadsfasd" });
+                    old.unshift({
+                      number: Math.round(Math.random() * 100000),
+                      hash: "0xwefadsfasd",
+                      transactions: [
+                        {
+                          hash: "0xasdf"
+                        }
+                      ]
+                    });
                     console.log("old", old, "stateblocks", that.state.blocks);
                     that.setState({ blocks: old });
                   }}
@@ -49,7 +131,7 @@ class Home extends Component {
                   Elph Blockchain
                   <br className="hidden-xs hidden-sm" /> is super fast
                 </h2>
-                <p className="lead">TPS: XXXXX, Block No: XXXX</p>
+                <p className="lead">Transactions since visting: 1,412</p>
               </div>
               <CSSTransitionGroup
                 transitionName="example"
@@ -57,24 +139,17 @@ class Home extends Component {
                 transitionLeaveTimeout={700}
               >
                 {this.state.blocks.map(block => (
-                  <div
-                    key={block.number}
-                    className="bg--secondary boxed boxed--border boxed--lg"
-                  >
-                    <h4 style={{ display: "inline" }}>Block #{block.number}</h4>
-                    <p className="type--fade type--fine-print">{block.hash}</p>
-                    <p className="type--underline">Transactions</p>
-                  </div>
+                  <Block key={block.number} block={block} />
                 ))}
               </CSSTransitionGroup>
             </div>
-            <div className="col-md-6">
+            <div className="col-6">
               <div className="switchable__text">
                 <h2>
                   Ethereum
                   <br className="hidden-xs hidden-sm" /> is slow
                 </h2>
-                <p className="lead">TPS: XXXXX, Block No: XXXX</p>
+                <p className="lead">Transactions since visting: 245</p>
               </div>
               <div className="bg--secondary boxed boxed--border boxed--lg" />
             </div>

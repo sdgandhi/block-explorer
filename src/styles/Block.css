@@ -1,0 +1,17 @@
+.block-number {
+  display: inline;
+}
+
+.block-hash {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction {
+  padding: 2%;
+  margin: 0 !important;
+  float: left;
+  display: inline;
+  background: #7adfbb !important;
+}

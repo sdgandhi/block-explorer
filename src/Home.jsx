@@ -104,7 +104,7 @@ class Home extends Component {
       <section className="switchable switchable--switch">
         <div className="container">
           <div className="row justify-content-between">
-            <div className="col-6">
+            <div className="col-sm-6 col-12">
               <div className="switchable__text">
                 <a
                   href="#"
@@ -143,7 +143,7 @@ class Home extends Component {
                 ))}
               </CSSTransitionGroup>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6 col-12">
               <div className="switchable__text">
                 <h2>
                   Ethereum

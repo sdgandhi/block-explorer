@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
 import Navbar from "./Navbar.jsx";
 import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
+import BlockDetails from "./BlockDetails.jsx";
+import TxDetails from "./TxDetails.jsx";
 
 class App extends Component {
   render() {
@@ -9,7 +12,11 @@ class App extends Component {
       <div className="App">
         <Navbar />
         <div className="main-container">
-          <Home />
+          <Switch>
+            <Route path="/block/:hash" component={BlockDetails} />
+            <Route path="/tx/:hash" component={TxDetails} />
+            <Route path="/" component={Home} />
+          </Switch>
           <Footer />
         </div>
       </div>

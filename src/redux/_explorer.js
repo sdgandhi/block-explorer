@@ -1,5 +1,8 @@
-import { takeEvery, put } from "redux-saga/effects";
+import { takeEvery, put, call } from "redux-saga/effects";
+import Elph from "elph-sdk";
 import createAction from "./_createAction";
+
+const elph = new Elph("http://localhost:5000/rpc");
 
 // -- Constants --------------------------------------------------------------- //
 
@@ -17,6 +20,8 @@ export const fetchedLatestBlock = block =>
 function* fetchLatestBlockSaga() {
   yield takeEvery(FETCH_LATEST_BLOCK, function*(action) {
     console.log("FETCHING LATEST BLOCK SAGA", action);
+    const childStatus = yield call(elph.getStatus);
+    console.log("Child Chain Status: ", childStatus);
     yield put(fetchedLatestBlock({}));
   });
 }
@@ -35,9 +40,9 @@ export const EXPLORER_INITIAL_STATE = {
         hash:
           "0xd8cfcdbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6",
         transactions: [
-          {
-            hash: "0xasdf"
-          }
+          { hash: "0xasdf" },
+          { hash: "0xasdf" },
+          { hash: "0xasdf" }
         ]
       },
       {

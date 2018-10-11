@@ -1,32 +1,22 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { CSSTransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
 import BlockCard from "./block/BlockCard.jsx";
 import "../styles/Home.css";
-import { fetchLatestBlocks } from "../redux/_explorer";
 
-class Home extends Component {
+class Home extends PureComponent {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     explorer: PropTypes.shape({
       blocks: PropTypes.objectOf(
         PropTypes.shape({
           number: PropTypes.number.isRequired,
           hash: PropTypes.string.isRequired,
-          txns: PropTypes.arrayOf(
-            PropTypes.shape({
-              hash: PropTypes.string.isRequired
-            }).isRequired
-          ).isRequired
+          txHashes: PropTypes.arrayOf(PropTypes.string).isRequired
         }).isRequired
       ).isRequired
     }).isRequired
   };
-
-  componentDidMount() {
-    this.props.dispatch(fetchLatestBlocks());
-  }
 
   render() {
     const { blocks } = this.props.explorer;

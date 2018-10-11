@@ -25,8 +25,7 @@ class Navbar extends Component {
                   </NavLink>
                 </div>
                 <div className="col-9 col-md-10 text-right">
-                  <a
-                    href="#"
+                  <div
                     className="hamburger-toggle"
                     data-toggle-class="#menu3;hidden-xs hidden-sm"
                     onClick={() => {
@@ -36,7 +35,7 @@ class Navbar extends Component {
                     }}
                   >
                     <i className="icon icon--sm stack-interface stack-menu" />
-                  </a>
+                  </div>
                 </div>
               </div>
             </div>

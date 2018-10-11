@@ -15,17 +15,15 @@ class BlockDetails extends PureComponent {
       PropTypes.shape({
         number: PropTypes.number.isRequired,
         hash: PropTypes.string.isRequired,
-        txns: PropTypes.arrayOf(
-          PropTypes.shape({
-            hash: PropTypes.string.isRequired
-          }).isRequired
-        ).isRequired
+        txHashes: PropTypes.arrayOf(PropTypes.string).isRequired
       }).isRequired
     ).isRequired
   };
 
   render() {
     const blockNumber = this.props.match.params.number;
+
+    // TODO(Sarat): Fetch this block if it isn't fetched yet.
     const block = this.props.blocks[blockNumber];
 
     if (!block) {

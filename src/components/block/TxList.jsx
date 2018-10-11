@@ -10,7 +10,8 @@ class TxList extends PureComponent {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired
     }).isRequired,
-    txns: PropTypes.arrayOf(
+    txHashes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    txns: PropTypes.objectOf(
       PropTypes.shape({
         hash: PropTypes.string.isRequired,
         blockNumber: PropTypes.number.isRequired,
@@ -26,7 +27,7 @@ class TxList extends PureComponent {
   }
 
   render() {
-    const { txns } = this.props;
+    const txns = this.props.txHashes.map(hash => this.props.txns[hash]);
 
     return (
       <div>
@@ -92,6 +93,8 @@ class TxList extends PureComponent {
   }
 }
 
-TxList = connect()(TxList);
+TxList = connect(state => ({
+  txns: state.explorer.txns
+}))(TxList);
 
 export default withRouter(TxList);

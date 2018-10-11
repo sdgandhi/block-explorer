@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import "../../styles/TxList.scss";
-import Link from "react-router-dom/Link";
+import BlockLink from "./BlockLink";
 
 class TxList extends PureComponent {
   static propTypes = {
@@ -23,7 +23,7 @@ class TxList extends PureComponent {
   };
 
   clickedTx(tx) {
-    this.props.history.push(`/tx/${tx.hash}`);
+    this.props.history.push(`/tx/${tx.blockNumber}/${tx.hash}`);
   }
 
   render() {
@@ -70,9 +70,7 @@ class TxList extends PureComponent {
                 <p>{tx.slot}</p>
               </div>
               <div className="col-md-2 col-sm-3 d-none d-sm-block">
-                <Link to={`/block/${tx.prevBlockNumber}`}>
-                  <code>#{tx.prevBlockNumber}</code>
-                </Link>
+                <BlockLink blockNumber={tx.prevBlockNumber} />
               </div>
               <div className="col-md-2 col-sm-2 col-4">
                 {tx.spent ? (

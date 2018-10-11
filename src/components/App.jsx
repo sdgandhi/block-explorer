@@ -25,7 +25,7 @@ class App extends Component {
         <div className="main-container">
           <Switch>
             <Route path="/block/:number" component={BlockDetails} />
-            <Route path="/tx/:hash" component={TxDetails} />
+            <Route path="/tx/:number/:hash" component={TxDetails} />
             <Route path="/" component={Home} />
           </Switch>
           <Footer />

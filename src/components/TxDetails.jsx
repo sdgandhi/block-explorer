@@ -1,17 +1,23 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Link from "react-router-dom/Link";
 import logoSymbol from "../images/logo_symbol.png";
 import CopyToClipboardButton from "./CopyToClipboardButton";
 import ElphUtils from "../utils/ElphUtils";
+import BlockLink from "./block/BlockLink";
+import { fetchBlock } from "../redux/_explorer.js";
+import Loader from "./Loader.jsx";
+import NotFound from "./NotFound";
 import "../styles/TxDetails.scss";
 
 class TxDetails extends PureComponent {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    fetchingBlocks: PropTypes.objectOf(PropTypes.string).isRequired,
     match: PropTypes.shape({
       params: PropTypes.shape({
-        hash: PropTypes.string.isRequired
+        hash: PropTypes.string.isRequired,
+        number: PropTypes.string.isRequired
       }).isRequired
     }).isRequired,
     txns: PropTypes.objectOf(
@@ -24,10 +30,33 @@ class TxDetails extends PureComponent {
         newOwner: PropTypes.string.isRequired,
         spent: PropTypes.bool.isRequired
       })
+    ).isRequired,
+    blocks: PropTypes.objectOf(
+      PropTypes.shape({
+        number: PropTypes.number.isRequired,
+        hash: PropTypes.string.isRequired,
+        txHashes: PropTypes.arrayOf(PropTypes.string).isRequired
+      }).isRequired
     ).isRequired
   };
 
+  componentDidMount() {
+    const blockNumber = this.props.match.params.number;
+    this.props.dispatch(fetchBlock(blockNumber));
+  }
+
   render() {
+    const blockNumber = this.props.match.params.number;
+
+    if (blockNumber in this.props.fetchingBlocks) {
+      return <Loader message="Fetching Transaction..." />;
+    }
+
+    const block = this.props.blocks[blockNumber];
+    if (!block) {
+      return <NotFound />;
+    }
+
     const txHash = this.props.match.params.hash;
     const tx = this.props.txns[txHash];
 
@@ -58,11 +87,9 @@ class TxDetails extends PureComponent {
                 </span>
               </div>
               <div className="card__meta">
-                <span className="pl-3">
-                  Block
-                  <Link to={`/block/${tx.blockNumber}`}>
-                    <code className="pl-2 type--bold">#{tx.blockNumber}</code>
-                  </Link>
+                <span>
+                  <span className="pr-2">Block</span>
+                  <BlockLink blockNumber={tx.blockNumber} />
                 </span>
               </div>
             </div>
@@ -91,9 +118,7 @@ class TxDetails extends PureComponent {
                 </div>
                 <div className="col-md-4">
                   <strong className="pr-2">Previous Block:</strong>
-                  <Link to={`/block/${tx.prevBlockNumber}`}>
-                    <code>#{tx.prevBlockNumber}</code>
-                  </Link>
+                  <BlockLink blockNumber={tx.prevBlockNumber} />
                 </div>
               </div>
             </div>
@@ -118,6 +143,8 @@ class TxDetails extends PureComponent {
 }
 
 TxDetails = connect(state => ({
+  fetchingBlocks: state.explorer.fetchingBlocks,
+  blocks: state.explorer.blocks,
   txns: state.explorer.txns
 }))(TxDetails);
 

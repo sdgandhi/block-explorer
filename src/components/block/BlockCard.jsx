@@ -1,11 +1,11 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import "../../styles/Block.scss";
 import logoSymbol from "../../images/logo_symbol.png";
 import CopyToClipboardButton from "../CopyToClipboardButton";
 import ElphUtils from "../../utils/ElphUtils";
 import TxList from "./TxList";
+import BlockLink from "./BlockLink";
 
 class BlockCard extends PureComponent {
   static propTypes = {
@@ -33,12 +33,11 @@ class BlockCard extends PureComponent {
       <div className="card card-1 boxed boxed--sm boxed--border">
         <div className="card__top">
           <div className="card__avatar">
-            <Link className="block-link" to={blockUrl}>
-              <img alt="logo symbol" src={logoSymbol} />
-              <span>
-                <h4 className="block-number">Block #{block.number}</h4>
-              </span>
-            </Link>
+            <img alt="logo symbol" src={logoSymbol} />
+            <h4 className="block-number">
+              <span className="mr-2">Block</span>
+              <BlockLink blockNumber={block.number} />
+            </h4>
           </div>
           <div className="card__meta">
             <span>{minedAtDate}</span>

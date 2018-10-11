@@ -1,0 +1,24 @@
+.tx-hex {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-row {
+  cursor: pointer;
+  width: 100%;
+  margin: 10px 0 0 0;
+  padding: 10px 0 10px 0;
+  background: #fafafa !important;
+}
+
+.transaction-header {
+  width: 100%;
+  margin: 10px 0 0 0;
+  padding: 10px 0 10px 0;
+  background: #eeeeee !important;
+}
+
+.transaction-row:hover {
+  background: #f5f5f5 !important;
+}

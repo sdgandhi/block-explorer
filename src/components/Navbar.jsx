@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
 import logo from "../images/logo.svg";
 import "../styles/Navbar.css";
 
@@ -18,10 +19,10 @@ class Navbar extends Component {
             <div className="container">
               <div className="row">
                 <div className="col-3 col-md-2">
-                  <a href="index.html">
+                  <NavLink to="/">
                     <img className="logo logo-dark" alt="logo" src={logo} />
                     <img className="logo logo-light" alt="logo" src={logo} />
-                  </a>
+                  </NavLink>
                 </div>
                 <div className="col-9 col-md-10 text-right">
                   <a
@@ -50,10 +51,10 @@ class Navbar extends Component {
               <div className="row">
                 <div className="col-lg-1 hidden-xs hidden-sm order-lg-1">
                   <div className="bar__module">
-                    <a href="index.html">
+                    <NavLink to="/">
                       <img className="logo logo-dark" alt="logo" src={logo} />
                       <img className="logo logo-light" alt="logo" src={logo} />
-                    </a>
+                    </NavLink>
                   </div>
                 </div>
                 <div className="col-lg-6 offset-lg-2 order-lg-4">

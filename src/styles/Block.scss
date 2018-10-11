@@ -2,6 +2,10 @@
   display: inline;
 }
 
+.card {
+  box-shadow: 0 0.3rem 1.4rem rgba(0, 0, 0, 0.05) !important;
+}
+
 .block-hash {
   white-space: nowrap;
   overflow: hidden;
@@ -9,9 +13,8 @@
 }
 
 .transaction {
-  padding: 1%;
+  padding: 0.5%;
   margin: 1px 1px !important;
-  display: inline-block;
   background: #7adfbb !important;
 }
 

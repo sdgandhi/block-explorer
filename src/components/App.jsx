@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import Navbar from "./Navbar.jsx";
+import Navbar from "./navbar/Navbar.jsx";
 import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
 import BlockDetails from "./block/BlockDetails.jsx";

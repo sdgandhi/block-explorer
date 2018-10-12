@@ -7,15 +7,23 @@ import {
   lastFetchedBlockNumberSelector,
   blocksSelector,
   fetchingBlocksSelector,
-  pollForNewBlocksSelector
+  pollForNewBlocksSelector,
+  rpcUrlSelector
 } from "./selectors";
 
-const elph = new Elph("http://localhost:5000/rpc");
+// TODO(Sarat): Move this to ELph Utils.
+const ELPH_RPC_URL =
+  process && process.env && process.env.NODE_ENV === "development"
+    ? "http://localhost:5000/rpc"
+    : "https://chain.elph.com/rpc";
+
+let elph = new Elph(ELPH_RPC_URL);
 
 const BLOCK_FETCH_INTERVAL = 5000;
 
 // -- Constants --------------------------------------------------------------- //
 
+const SET_RPC_URL = "SET_RPC_URL";
 const FETCH_BLOCK = "FETCH_BLOCK";
 const FETCHING_BLOCK = "FETCHING_BLOCK";
 const SUBSCRIBE_TO_BLOCKS = "SUBSCRIBE_TO_BLOCKS";
@@ -25,6 +33,7 @@ const RECORD_FETCH_FAILURE_BLOCKS = "RECORD_FETCH_FAILURE_BLOCKS";
 
 // -- Actions --------------------------------------------------------------- //
 
+export const setRpcUrl = rpcUrl => createAction(SET_RPC_URL, { rpcUrl });
 export const fetchBlock = blockNumber =>
   createAction(FETCH_BLOCK, { blockNumber });
 const fetchingBlock = blockNumber =>
@@ -48,6 +57,14 @@ const recordFetchFailureBlocks = blockNumbers =>
   createAction(RECORD_FETCH_FAILURE_BLOCKS, { blockNumbers });
 
 // -- Sagas --------------------------------------------------------------- //
+
+function* setRpcUrlSaga() {
+  yield takeEvery(SET_RPC_URL, function* handler() {
+    console.log("SET RPC URL SAGA");
+    const newRpcUrl = yield select(rpcUrlSelector);
+    elph = new Elph(newRpcUrl);
+  });
+}
 
 const parseBlocksResponse = blocksList => {
   // Construct block map and txns map from the results.
@@ -162,11 +179,13 @@ function* subscribeToBlocksSaga() {
 export const runExplorerSagas = sagaMiddleware => {
   sagaMiddleware.run(subscribeToBlocksSaga);
   sagaMiddleware.run(fetchBlockSaga);
+  sagaMiddleware.run(setRpcUrlSaga);
 };
 
 // -- Reducer --------------------------------------------------------------- //
 
 export const EXPLORER_INITIAL_STATE = {
+  rpcUrl: ELPH_RPC_URL,
   txCountSinceVisiting: 0,
   pollForNewBlocks: true,
   lastFetchedBlockNumber: 0,
@@ -178,6 +197,8 @@ export const EXPLORER_INITIAL_STATE = {
 const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case SET_RPC_URL:
+      return update(state, { rpcUrl: { $set: payload.rpcUrl } });
     case RECORD_FETCHED_BLOCKS:
       return update(state, {
         blocks: { $merge: payload.blocks },

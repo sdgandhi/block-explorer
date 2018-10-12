@@ -1,17 +1,10 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
-import logo from "../images/logo.svg";
-import "../styles/Navbar.scss";
-import { stopBlockSubscription, subscribeToBlocks } from "../redux/_elph";
+import logo from "../../images/logo.svg";
+import DisablePollingButton from "./DisablePollingButton.jsx";
+import "../../styles/Navbar.scss";
 
 class Navbar extends Component {
-  static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    pollForNewBlocks: PropTypes.bool.isRequired
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -66,27 +59,7 @@ class Navbar extends Component {
                 </div>
                 <div className="col-lg-2 offset-lg-9 order-lg-4">
                   <div className="bar__module h-100">
-                    <div className="h-100 d-flex flex-column justify-content-center float-right">
-                      {this.props.pollForNewBlocks ? (
-                        <span
-                          className="toggle-polling-btn type--fade type--fine-print"
-                          onClick={() =>
-                            this.props.dispatch(stopBlockSubscription())
-                          }
-                        >
-                          Disable Polling
-                        </span>
-                      ) : (
-                        <span
-                          className="toggle-polling-btn type--bold type--fine-print color--success"
-                          onClick={() =>
-                            this.props.dispatch(subscribeToBlocks())
-                          }
-                        >
-                          Enable Polling
-                        </span>
-                      )}
-                    </div>
+                    <DisablePollingButton />
                   </div>
                 </div>
               </div>
@@ -97,9 +70,5 @@ class Navbar extends Component {
     );
   }
 }
-
-Navbar = connect(state => ({
-  pollForNewBlocks: state.elph.pollForNewBlocks
-}))(Navbar);
 
 export default Navbar;

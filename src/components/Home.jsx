@@ -5,9 +5,23 @@ import { connect } from "react-redux";
 import BlockCard from "./block/BlockCard.jsx";
 import "../styles/Home.css";
 
+const getSortedBlockList = blocks =>
+  Object.values(blocks).sort(
+    (a, b) =>
+      a.minedAt === b.minedAt ? a.number < b.number : a.minedAt < b.minedAt
+  );
+
 class Home extends PureComponent {
   static propTypes = {
+    ethTxCountSinceVisiting: PropTypes.number.isRequired,
     blocks: PropTypes.objectOf(
+      PropTypes.shape({
+        number: PropTypes.number.isRequired,
+        hash: PropTypes.string.isRequired,
+        txHashes: PropTypes.arrayOf(PropTypes.string).isRequired
+      }).isRequired
+    ).isRequired,
+    ethblocks: PropTypes.objectOf(
       PropTypes.shape({
         number: PropTypes.number.isRequired,
         hash: PropTypes.string.isRequired,
@@ -16,11 +30,22 @@ class Home extends PureComponent {
     ).isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.startTime = Date.now();
+  }
+
+  getAverageTps(txCount) {
+    const currentTime = Date.now();
+    const duration = (currentTime - this.startTime) / 1000;
+    return Math.round(txCount / duration);
+  }
+
   render() {
-    const { blocks } = this.props;
-    const blocksToDisplay = Object.values(blocks).sort(
-      (a, b) => a.number < b.number
-    );
+    const { blocks, ethblocks, ethTxCountSinceVisiting } = this.props;
+    const blocksToDisplay = getSortedBlockList(blocks);
+    const ethBlocksToDisplay = getSortedBlockList(ethblocks);
+    const ethTps = this.getAverageTps(ethTxCountSinceVisiting);
 
     return (
       <section className="switchable switchable--switch">
@@ -35,7 +60,7 @@ class Home extends PureComponent {
                 <p className="lead">Transactions since visting: 1,412</p>
               </div>
               <CSSTransitionGroup
-                transitionName="blocks"
+                transitionName="example"
                 transitionEnterTimeout={700}
                 transitionLeaveTimeout={700}
               >
@@ -50,15 +75,20 @@ class Home extends PureComponent {
                   Ethereum
                   <br className="hidden-xs hidden-sm" /> is slow
                 </h2>
-                <p className="lead">Transactions since visting: 245</p>
+                <p className="lead">
+                  Transactions since visting: {ethTxCountSinceVisiting}
+                  <span className="pl-3 type--fade type--fine-print">
+                    ({ethTps} TPS)
+                  </span>
+                </p>
               </div>
               <CSSTransitionGroup
-                transitionName="ethereumBlocks"
+                transitionName="example"
                 transitionEnterTimeout={700}
                 transitionLeaveTimeout={700}
               >
-                {blocksToDisplay.map(block => (
-                  <BlockCard key={block.number} block={block} />
+                {ethBlocksToDisplay.map(block => (
+                  <BlockCard key={block.number} block={block} eth />
                 ))}
               </CSSTransitionGroup>
             </div>
@@ -70,7 +100,9 @@ class Home extends PureComponent {
 }
 
 Home = connect(state => ({
-  blocks: state.elph.blocks
+  blocks: state.elph.blocks,
+  ethblocks: state.eth.blocks,
+  ethTxCountSinceVisiting: state.eth.txCountSinceVisiting
 }))(Home);
 
 export default Home;

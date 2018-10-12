@@ -41,6 +41,7 @@ const parseBlocksResponse = blocksList => {
     const txList = block.txns;
     delete formattedBlock.txns;
     formattedBlock.txHashes = txList.map(tx => tx.hash);
+    formattedBlock.txCount = formattedBlock.txHashes.length;
     txList.forEach(tx => {
       newTxns[tx.hash] = tx;
     });
@@ -125,6 +126,7 @@ const createTx = (slot, denomination, prevBlockNumber, spent) => ({
 const createBlock = (number, txHashes) => ({
   number,
   txHashes,
+  txCount: txHashes.length,
   minedAt: Date.now(),
   hash: `0x${number}dbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6`,
   signature:

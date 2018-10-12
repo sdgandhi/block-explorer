@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import "../../styles/Block.scss";
 import logoSymbol from "../../images/logo_symbol.png";
+import ethLogoSymbol from "../../images/ethereum_symbol.png";
 import CopyToClipboardButton from "../CopyToClipboardButton";
 import ElphUtils from "../../utils/ElphUtils";
 import TxList from "./TxList";
@@ -10,6 +11,7 @@ import BlockLink from "./BlockLink";
 class BlockCard extends PureComponent {
   static propTypes = {
     detailed: PropTypes.bool,
+    eth: PropTypes.bool,
     block: PropTypes.shape({
       number: PropTypes.number.isRequired,
       hash: PropTypes.string.isRequired,
@@ -19,24 +21,41 @@ class BlockCard extends PureComponent {
   };
 
   static defaultProps = {
-    detailed: false
+    detailed: false,
+    eth: false
   };
 
   render() {
-    const { block, detailed } = this.props;
-    const numTxns = block.txHashes.length;
+    const { block, detailed, eth } = this.props;
+    const txCount = block.txCount;
     const blockUrl = `/block/${block.number}`;
     const absoluteBlockUrl = `${ElphUtils.getOriginUrl()}${blockUrl}`;
     const minedAtDate = new Date(block.minedAt).toLocaleString("en-US");
+
+    const etherscanUrl = `https://etherscan.io/block/${block.number}`;
 
     return (
       <div className="card card-1 boxed boxed--sm boxed--border">
         <div className="card__top">
           <div className="card__avatar">
-            <img alt="logo symbol" src={logoSymbol} />
+            {eth ? (
+              <img alt="logo symbol" src={ethLogoSymbol} />
+            ) : (
+              <img alt="logo symbol" src={logoSymbol} />
+            )}
             <h4 className="block-number">
               <span className="mr-2">Block</span>
-              <BlockLink blockNumber={block.number} />
+              {eth ? (
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={etherscanUrl}
+                >
+                  <code className="type--bold">#{block.number}</code>
+                </a>
+              ) : (
+                <BlockLink blockNumber={block.number} />
+              )}
             </h4>
           </div>
           <div className="card__meta">
@@ -47,11 +66,11 @@ class BlockCard extends PureComponent {
           <strong>Block Hash:</strong>
           <p className="block-hash type--fade type--fine-print">{block.hash}</p>
           <div>
-            <strong>{numTxns} Transactions:</strong>
+            <strong>{txCount} Transactions:</strong>
           </div>
           <div className="d-flex flex-wrap justify-content-start align-items-start">
-            {block.txHashes.map(hash => (
-              <div key={hash} className="transaction" />
+            {[...Array(txCount).keys()].map(hash => (
+              <div key={`${block.hash}${hash}`} className="transaction" />
             ))}
           </div>
           {detailed && (
@@ -65,10 +84,21 @@ class BlockCard extends PureComponent {
             <li className="list-inline-item">
               <div className="card__action">
                 <i className="icon-Link" />
-                <CopyToClipboardButton
-                  textToCopy={absoluteBlockUrl}
-                  title="Copy Link"
-                />
+                {eth ? (
+                  <a
+                    className="pl-2 color--grey"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={etherscanUrl}
+                  >
+                    View on Etherscan
+                  </a>
+                ) : (
+                  <CopyToClipboardButton
+                    textToCopy={absoluteBlockUrl}
+                    title="Copy Link"
+                  />
+                )}
               </div>
             </li>
           </ul>

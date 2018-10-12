@@ -8,6 +8,7 @@ import Footer from "./Footer.jsx";
 import BlockDetails from "./block/BlockDetails.jsx";
 import TxDetails from "./tx/TxDetails.jsx";
 import { fetchLatestBlocks } from "../redux/_elph";
+import { subscribeToEthBlocks } from "../redux/_eth.js";
 
 class App extends Component {
   static propTypes = {
@@ -16,6 +17,7 @@ class App extends Component {
 
   componentDidMount() {
     this.props.dispatch(fetchLatestBlocks());
+    this.props.dispatch(subscribeToEthBlocks());
   }
 
   render() {

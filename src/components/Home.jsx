@@ -5,14 +5,20 @@ import { connect } from "react-redux";
 import BlockCard from "./block/BlockCard.jsx";
 import "../styles/Home.css";
 
-const getSortedBlockList = blocks =>
-  Object.values(blocks).sort(
-    (a, b) =>
-      a.minedAt === b.minedAt ? a.number < b.number : a.minedAt < b.minedAt
-  );
+const START_TIME = Date.now();
+
+const getAverageTps = txCount => {
+  const currentTime = Date.now();
+  const duration = (currentTime - START_TIME) / 1000;
+  return Math.round(txCount / duration);
+};
+
+const getSortedBlockList = (blocks, key) =>
+  Object.values(blocks).sort((a, b) => b[key] - a[key]);
 
 class Home extends PureComponent {
   static propTypes = {
+    txCountSinceVisiting: PropTypes.number.isRequired,
     ethTxCountSinceVisiting: PropTypes.number.isRequired,
     blocks: PropTypes.objectOf(
       PropTypes.shape({
@@ -30,22 +36,18 @@ class Home extends PureComponent {
     ).isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.startTime = Date.now();
-  }
-
-  getAverageTps(txCount) {
-    const currentTime = Date.now();
-    const duration = (currentTime - this.startTime) / 1000;
-    return Math.round(txCount / duration);
-  }
-
   render() {
-    const { blocks, ethblocks, ethTxCountSinceVisiting } = this.props;
-    const blocksToDisplay = getSortedBlockList(blocks);
-    const ethBlocksToDisplay = getSortedBlockList(ethblocks);
-    const ethTps = this.getAverageTps(ethTxCountSinceVisiting);
+    const {
+      blocks,
+      ethblocks,
+      txCountSinceVisiting,
+      ethTxCountSinceVisiting
+    } = this.props;
+
+    const blocksToDisplay = getSortedBlockList(blocks, "number");
+    const ethBlocksToDisplay = getSortedBlockList(ethblocks, "minedAt");
+    const tps = getAverageTps(txCountSinceVisiting);
+    const ethTps = getAverageTps(ethTxCountSinceVisiting);
 
     return (
       <section className="switchable switchable--switch">
@@ -57,7 +59,12 @@ class Home extends PureComponent {
                   Elph Blockchain
                   <br className="hidden-xs hidden-sm" /> is super fast
                 </h2>
-                <p className="lead">Transactions since visting: 1,412</p>
+                <p className="lead">
+                  Transactions since visting: {txCountSinceVisiting}
+                  <span className="pl-3 type--fade type--fine-print">
+                    ({tps} TPS)
+                  </span>
+                </p>
               </div>
               <CSSTransitionGroup
                 transitionName="example"
@@ -65,7 +72,7 @@ class Home extends PureComponent {
                 transitionLeaveTimeout={700}
               >
                 {blocksToDisplay.map(block => (
-                  <BlockCard key={block.number} block={block} />
+                  <BlockCard key={`${block.number}`} block={block} />
                 ))}
               </CSSTransitionGroup>
             </div>
@@ -101,6 +108,7 @@ class Home extends PureComponent {
 
 Home = connect(state => ({
   blocks: state.elph.blocks,
+  txCountSinceVisiting: state.elph.txCountSinceVisiting,
   ethblocks: state.eth.blocks,
   ethTxCountSinceVisiting: state.eth.txCountSinceVisiting
 }))(Home);

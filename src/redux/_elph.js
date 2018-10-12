@@ -1,20 +1,25 @@
 import { takeEvery, put, call, select } from "redux-saga/effects";
+import { delay } from "redux-saga";
 import Elph from "elph-sdk";
 import update from "immutability-helper";
 import createAction from "./_createAction";
 import {
   lastFetchedBlockNumberSelector,
   blocksSelector,
-  fetchingBlocksSelector
+  fetchingBlocksSelector,
+  pollForNewBlocksSelector
 } from "./selectors";
 
 const elph = new Elph("http://localhost:5000/rpc");
+
+const BLOCK_FETCH_INTERVAL = 5000;
 
 // -- Constants --------------------------------------------------------------- //
 
 const FETCH_BLOCK = "FETCH_BLOCK";
 const FETCHING_BLOCK = "FETCHING_BLOCK";
-const FETCH_LATEST_BLOCKS = "FETCH_LATEST_BLOCKS";
+const SUBSCRIBE_TO_BLOCKS = "SUBSCRIBE_TO_BLOCKS";
+const STOP_BLOCK_SUBSCRIPTION = "STOP_BLOCK_SUBSCRIPTION";
 const RECORD_FETCHED_BLOCKS = "RECORD_FETCHED_BLOCKS";
 const RECORD_FETCH_FAILURE_BLOCKS = "RECORD_FETCH_FAILURE_BLOCKS";
 
@@ -24,9 +29,21 @@ export const fetchBlock = blockNumber =>
   createAction(FETCH_BLOCK, { blockNumber });
 const fetchingBlock = blockNumber =>
   createAction(FETCHING_BLOCK, { blockNumber });
-export const fetchLatestBlocks = () => createAction(FETCH_LATEST_BLOCKS);
-const recordFetchedBlocks = (blocks, txns, lastFetchedBlockNumber) =>
-  createAction(RECORD_FETCHED_BLOCKS, { blocks, txns, lastFetchedBlockNumber });
+export const subscribeToBlocks = () => createAction(SUBSCRIBE_TO_BLOCKS);
+export const stopBlockSubscription = () =>
+  createAction(STOP_BLOCK_SUBSCRIPTION);
+const recordFetchedBlocks = (
+  blocks,
+  txns,
+  lastFetchedBlockNumber,
+  newTxCount = 0
+) =>
+  createAction(RECORD_FETCHED_BLOCKS, {
+    blocks,
+    txns,
+    lastFetchedBlockNumber,
+    newTxCount
+  });
 const recordFetchFailureBlocks = blockNumbers =>
   createAction(RECORD_FETCH_FAILURE_BLOCKS, { blockNumbers });
 
@@ -87,105 +104,75 @@ function* fetchBlockSaga() {
   });
 }
 
-function* fetchLatestBlocksSaga() {
-  yield takeEvery(FETCH_LATEST_BLOCKS, function* handler(action) {
-    console.log("FETCH LATEST BLOCK SAGA", action);
-    const lastFetchedBlockNumber = yield select(lastFetchedBlockNumberSelector);
-    const blocksList = yield call(elph.getBlocks, lastFetchedBlockNumber);
+function* pollForNewBlocks() {
+  let poll = yield select(pollForNewBlocksSelector);
+  let isFirstFetch = true;
 
-    const { newBlocks, newTxns } = parseBlocksResponse(blocksList);
+  while (poll) {
+    try {
+      // Set the high watermark for block numbers starting at the current block number if it hasn't been set.
+      let lastFetchedBlockNumber = yield select(lastFetchedBlockNumberSelector);
+      if (lastFetchedBlockNumber === 0) {
+        lastFetchedBlockNumber = yield call(elph.getBlockNumber);
+      }
 
-    const latestBlockNumber = Math.max(
-      lastFetchedBlockNumber,
-      ...Object.keys(newBlocks)
-    );
+      // Fetch the previous few blocks for seeding purposes, if this is the first time fetching.
+      if (isFirstFetch) {
+        lastFetchedBlockNumber = Math.max(0, lastFetchedBlockNumber - 2000);
+        isFirstFetch = false;
+      }
 
-    yield put(recordFetchedBlocks(newBlocks, newTxns, latestBlockNumber));
+      // Actually fetch the blocks after the watermark.
+      const blocksList = yield call(elph.getBlocks, lastFetchedBlockNumber);
+      const { newBlocks, newTxns } = parseBlocksResponse(blocksList);
+
+      // Calculate the new watermark based on the latest block that was returned.
+      const latestBlockNumber = Math.max(
+        lastFetchedBlockNumber,
+        ...Object.keys(newBlocks)
+      );
+
+      // Calculate the number of new transactions added.
+      const newTxCount = Object.values(newBlocks).reduce(
+        (total, block) => total + block.txCount,
+        0
+      );
+
+      yield put(
+        recordFetchedBlocks(newBlocks, newTxns, latestBlockNumber, newTxCount)
+      );
+
+      yield call(delay, BLOCK_FETCH_INTERVAL);
+    } catch (e) {
+      console.error(e);
+      yield call(delay, BLOCK_FETCH_INTERVAL * 10);
+    }
+
+    poll = yield select(pollForNewBlocksSelector);
+  }
+}
+
+function* subscribeToBlocksSaga() {
+  yield takeEvery(SUBSCRIBE_TO_BLOCKS, function* handler() {
+    console.log("SUBSCRIBE TO BLOCKS SAGA");
+    yield call(pollForNewBlocks);
   });
 }
 
 export const runExplorerSagas = sagaMiddleware => {
-  sagaMiddleware.run(fetchLatestBlocksSaga);
+  sagaMiddleware.run(subscribeToBlocksSaga);
   sagaMiddleware.run(fetchBlockSaga);
 };
 
 // -- Reducer --------------------------------------------------------------- //
 
-const createTx = (slot, denomination, prevBlockNumber, spent) => ({
-  slot,
-  denomination,
-  prevBlockNumber,
-  spent,
-  blockNumber: prevBlockNumber + 1,
-  hash: `0x${slot}c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f`,
-  signature:
-    "0x00552bbcf4ddecea0aba93edacb85bdd182d4fac69c2aa5f861d15f03d23ed7b947829234a73e833bbcc49eb0fdc8dcdc29a3f7fa3cb0d5067cd9956312811081801",
-  newOwner: "0x88fc071f55aa16f4a26d887204f6fa6c22dbcfe9"
-});
-
-const createBlock = (number, txHashes) => ({
-  number,
-  txHashes,
-  txCount: txHashes.length,
-  minedAt: Date.now(),
-  hash: `0x${number}dbc65a949f02444f0fe2997510489874ee7c34da55e45f27d167e374dc6`,
-  signature:
-    "0x00552bbcf4ddecea0aba93edacb85bdd182d4fac69c2aa5f861d15f03d23ed7b947829234a73e833bbcc49eb0fdc8dcdc29a3f7fa3cb0d5067cd9956312811081801"
-});
-
 export const EXPLORER_INITIAL_STATE = {
+  txCountSinceVisiting: 0,
+  pollForNewBlocks: true,
   lastFetchedBlockNumber: 0,
   fetchingBlocks: {},
-  blocks: {
-    12345: createBlock(12345, [
-      "0x1c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f",
-      "0x2c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f",
-      "0x3c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f",
-      "0x4c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f"
-    ]),
-    11345: createBlock(11345, [
-      "0x5c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f",
-      "0x6c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f"
-    ])
-  },
-  txns: {
-    "0x1c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f": createTx(
-      1,
-      100,
-      12345,
-      false
-    ),
-    "0x2c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f": createTx(
-      2,
-      200,
-      11345,
-      false
-    ),
-    "0x3c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f": createTx(
-      3,
-      300,
-      11345,
-      true
-    ),
-    "0x4c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f": createTx(
-      4,
-      400,
-      11345,
-      false
-    ),
-    "0x5c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f": createTx(
-      5,
-      100,
-      11345,
-      false
-    ),
-    "0x6c31fc15422ebad28aaf9089c306702f67540b53c7eea8b7d2941044b027100f": createTx(
-      6,
-      200,
-      10345,
-      false
-    )
-  }
+  blocks: {},
+  txns: {}
 };
 
 const reducer = (state, action) => {
@@ -196,7 +183,8 @@ const reducer = (state, action) => {
         blocks: { $merge: payload.blocks },
         txns: { $merge: payload.txns },
         lastFetchedBlockNumber: { $set: payload.lastFetchedBlockNumber },
-        fetchingBlocks: { $unset: Object.keys(payload.blocks) }
+        fetchingBlocks: { $unset: Object.keys(payload.blocks) },
+        txCountSinceVisiting: count => count + payload.newTxCount
       });
     case RECORD_FETCH_FAILURE_BLOCKS:
       return update(state, {
@@ -206,6 +194,10 @@ const reducer = (state, action) => {
       return update(state, {
         fetchingBlocks: { $merge: { [payload.blockNumber]: "fetching" } }
       });
+    case SUBSCRIBE_TO_BLOCKS:
+      return update(state, { pollForNewBlocks: { $set: true } });
+    case STOP_BLOCK_SUBSCRIPTION:
+      return update(state, { pollForNewBlocks: { $set: false } });
     default:
       return state;
   }

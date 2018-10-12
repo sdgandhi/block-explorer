@@ -7,7 +7,7 @@ import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
 import BlockDetails from "./block/BlockDetails.jsx";
 import TxDetails from "./tx/TxDetails.jsx";
-import { fetchLatestBlocks } from "../redux/_elph";
+import { subscribeToBlocks } from "../redux/_elph";
 import { subscribeToEthBlocks } from "../redux/_eth.js";
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.props.dispatch(fetchLatestBlocks());
+    this.props.dispatch(subscribeToBlocks());
     this.props.dispatch(subscribeToEthBlocks());
   }
 

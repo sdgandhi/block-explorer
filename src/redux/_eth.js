@@ -99,9 +99,9 @@ function* subscribeToRemoteUpdates() {
 }
 
 function* fetchEthBlocksSaga() {
-  yield takeEvery(SUBSCRIBE_TO_ETH_BLOCKS, function* handler(action) {
+  yield takeEvery(SUBSCRIBE_TO_ETH_BLOCKS, function* handler() {
     try {
-      console.log("SUBSCRIBE TO ETH BLOCKS SAGA", action);
+      console.log("SUBSCRIBE TO ETH BLOCKS SAGA");
       yield fork(subscribeToRemoteUpdates);
     } catch (e) {
       console.error(e);

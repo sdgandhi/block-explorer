@@ -1,10 +1,16 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 import logo from "../../images/logo.svg";
 import DisablePollingButton from "./DisablePollingButton.jsx";
 import "../../styles/Navbar.scss";
 
 class Navbar extends Component {
+  static propTypes = {
+    rpcUrl: PropTypes.string.isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -13,6 +19,8 @@ class Navbar extends Component {
   }
 
   render() {
+    const { rpcUrl } = this.props;
+
     return (
       <div className="nav-container nav-contrast-border sticky-nav ">
         <div className="via-1538591159517" via="via-1538591159517" vio="asdf">
@@ -57,7 +65,21 @@ class Navbar extends Component {
                     </NavLink>
                   </div>
                 </div>
-                <div className="col-lg-2 offset-lg-9 order-lg-4">
+
+                <div className="col-lg-6 order-lg-2">
+                  <div className="bar__module pl-3">
+                    <form>
+                      <input
+                        type="search"
+                        placeholder={rpcUrl}
+                        name="query"
+                        value={rpcUrl}
+                      />
+                    </form>
+                  </div>
+                </div>
+
+                <div className="col-lg-2 offset-lg-3 order-lg-4">
                   <div className="bar__module h-100">
                     <DisablePollingButton />
                   </div>
@@ -70,5 +92,9 @@ class Navbar extends Component {
     );
   }
 }
+
+Navbar = connect(state => ({
+  rpcUrl: state.elph.rpcUrl
+}))(Navbar);
 
 export default Navbar;

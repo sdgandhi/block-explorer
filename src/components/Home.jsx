@@ -7,19 +7,17 @@ import "../styles/Home.css";
 
 class Home extends PureComponent {
   static propTypes = {
-    explorer: PropTypes.shape({
-      blocks: PropTypes.objectOf(
-        PropTypes.shape({
-          number: PropTypes.number.isRequired,
-          hash: PropTypes.string.isRequired,
-          txHashes: PropTypes.arrayOf(PropTypes.string).isRequired
-        }).isRequired
-      ).isRequired
-    }).isRequired
+    blocks: PropTypes.objectOf(
+      PropTypes.shape({
+        number: PropTypes.number.isRequired,
+        hash: PropTypes.string.isRequired,
+        txHashes: PropTypes.arrayOf(PropTypes.string).isRequired
+      }).isRequired
+    ).isRequired
   };
 
   render() {
-    const { blocks } = this.props.explorer;
+    const { blocks } = this.props;
     const blocksToDisplay = Object.values(blocks).sort(
       (a, b) => a.number < b.number
     );
@@ -72,7 +70,7 @@ class Home extends PureComponent {
 }
 
 Home = connect(state => ({
-  explorer: state.explorer
+  blocks: state.elph.blocks
 }))(Home);
 
 export default Home;

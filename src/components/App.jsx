@@ -6,8 +6,8 @@ import Navbar from "./Navbar.jsx";
 import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
 import BlockDetails from "./block/BlockDetails.jsx";
-import TxDetails from "./TxDetails.jsx";
-import { fetchLatestBlocks } from "../redux/_explorer";
+import TxDetails from "./tx/TxDetails.jsx";
+import { fetchLatestBlocks } from "../redux/_elph";
 
 class App extends Component {
   static propTypes = {

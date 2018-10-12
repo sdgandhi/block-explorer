@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import explorer from "./_explorer";
+import elph from "./_elph";
 
 export default combineReducers({
-  explorer
+  elph
 });

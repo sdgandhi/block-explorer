@@ -1,5 +1,5 @@
-export const blocksSelector = state => state.explorer.blocks;
-export const fetchingBlocksSelector = state => state.explorer.fetchingBlocks;
+export const blocksSelector = state => state.elph.blocks;
+export const fetchingBlocksSelector = state => state.elph.fetchingBlocks;
 
 export const lastFetchedBlockNumberSelector = state =>
-  state.explorer.lastFetchedBlockNumber;
+  state.elph.lastFetchedBlockNumber;

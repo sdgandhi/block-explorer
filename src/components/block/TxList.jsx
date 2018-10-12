@@ -92,7 +92,7 @@ class TxList extends PureComponent {
 }
 
 TxList = connect(state => ({
-  txns: state.explorer.txns
+  txns: state.elph.txns
 }))(TxList);
 
 export default withRouter(TxList);

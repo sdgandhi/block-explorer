@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { CSSTransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
 import BlockCard from "./block/BlockCard.jsx";
-import "../styles/Home.css";
 
 const START_TIME = Date.now();
 

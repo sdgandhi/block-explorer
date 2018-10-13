@@ -30,6 +30,10 @@ class Navbar extends Component {
 
   onUrlFormSubmit(e) {
     e.preventDefault();
+    if (this.state.rpcUrl === this.props.rpcUrl) {
+      return;
+    }
+
     this.props.dispatch(setRpcUrl(this.state.rpcUrl));
     this.setState({ formSubmitted: true });
     setTimeout(() => {
@@ -89,6 +93,7 @@ class Navbar extends Component {
                   <div className="bar__module pl-3">
                     <form onSubmit={e => this.onUrlFormSubmit(e)}>
                       <input
+                        className="url-input type--fade"
                         type="url"
                         placeholder={rpcUrl}
                         value={this.state.rpcUrl}

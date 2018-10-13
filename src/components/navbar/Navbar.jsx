@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
+import { CSSTransitionGroup } from "react-transition-group";
 import logo from "../../images/logo.svg";
 import DisablePollingButton from "./DisablePollingButton.jsx";
 import "../../styles/Navbar.scss";
@@ -17,7 +18,8 @@ class Navbar extends Component {
     super(props);
     this.state = {
       toggleHamburgerMenu: false,
-      rpcUrl: props.rpcUrl
+      rpcUrl: props.rpcUrl,
+      formSubmitted: false
     };
   }
 
@@ -29,6 +31,10 @@ class Navbar extends Component {
   onUrlFormSubmit(e) {
     e.preventDefault();
     this.props.dispatch(setRpcUrl(this.state.rpcUrl));
+    this.setState({ formSubmitted: true });
+    setTimeout(() => {
+      this.setState({ formSubmitted: false });
+    }, 2000);
   }
 
   render() {
@@ -92,7 +98,23 @@ class Navbar extends Component {
                   </div>
                 </div>
 
-                <div className="col-lg-2 offset-lg-3 order-lg-4">
+                <div className="col-lg-3 order-lg-2">
+                  <div className="bar__module h-100">
+                    <div className="h-100 d-flex flex-column justify-content-center">
+                      <CSSTransitionGroup
+                        transitionName="example"
+                        transitionEnterTimeout={300}
+                        transitionLeaveTimeout={700}
+                      >
+                        {this.state.formSubmitted && (
+                          <span className="color--success">Saved!</span>
+                        )}
+                      </CSSTransitionGroup>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-lg-2 order-lg-4">
                   <div className="bar__module h-100">
                     <DisablePollingButton />
                   </div>

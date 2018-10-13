@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { CSSTransitionGroup } from "react-transition-group";
 import logo from "../../images/logo.svg";
-import DisablePollingButton from "./DisablePollingButton.jsx";
+import TogglePollingButton from "./TogglePollingButton.jsx";
 import "../../styles/Navbar.scss";
 import { setRpcUrl } from "../../redux/_elph";
 
@@ -121,7 +121,7 @@ class Navbar extends Component {
 
                 <div className="col-lg-2 order-lg-4">
                   <div className="bar__module h-100">
-                    <DisablePollingButton />
+                    <TogglePollingButton />
                   </div>
                 </div>
               </div>

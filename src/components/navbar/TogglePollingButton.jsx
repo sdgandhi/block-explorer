@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { stopBlockSubscription, subscribeToBlocks } from "../../redux/_elph";
 
-class DisablePollingButton extends PureComponent {
+class TogglePollingButton extends PureComponent {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     pollForNewBlocks: PropTypes.bool.isRequired
@@ -32,8 +32,8 @@ class DisablePollingButton extends PureComponent {
   }
 }
 
-DisablePollingButton = connect(state => ({
+TogglePollingButton = connect(state => ({
   pollForNewBlocks: state.elph.pollForNewBlocks
-}))(DisablePollingButton);
+}))(TogglePollingButton);
 
-export default DisablePollingButton;
+export default TogglePollingButton;

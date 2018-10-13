@@ -5,17 +5,30 @@ import { connect } from "react-redux";
 import logo from "../../images/logo.svg";
 import DisablePollingButton from "./DisablePollingButton.jsx";
 import "../../styles/Navbar.scss";
+import { setRpcUrl } from "../../redux/_elph";
 
 class Navbar extends Component {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     rpcUrl: PropTypes.string.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      toggleHamburgerMenu: false
+      toggleHamburgerMenu: false,
+      rpcUrl: props.rpcUrl
     };
+  }
+
+  onUrlFormChanged(e) {
+    const rpcUrl = e.target.value;
+    this.setState({ rpcUrl });
+  }
+
+  onUrlFormSubmit(e) {
+    e.preventDefault();
+    this.props.dispatch(setRpcUrl(this.state.rpcUrl));
   }
 
   render() {
@@ -68,12 +81,12 @@ class Navbar extends Component {
 
                 <div className="col-lg-6 order-lg-2">
                   <div className="bar__module pl-3">
-                    <form>
+                    <form onSubmit={e => this.onUrlFormSubmit(e)}>
                       <input
-                        type="search"
+                        type="url"
                         placeholder={rpcUrl}
-                        name="query"
-                        value={rpcUrl}
+                        value={this.state.rpcUrl}
+                        onChange={e => this.onUrlFormChanged(e)}
                       />
                     </form>
                   </div>

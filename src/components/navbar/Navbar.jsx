@@ -2,24 +2,48 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import logo from "../images/logo.svg";
-import "../styles/Navbar.scss";
-import { stopBlockSubscription, subscribeToBlocks } from "../redux/_elph";
+import { CSSTransitionGroup } from "react-transition-group";
+import logo from "../../images/logo.svg";
+import TogglePollingButton from "./TogglePollingButton.jsx";
+import "../../styles/Navbar.scss";
+import { setRpcUrl } from "../../redux/_elph";
 
 class Navbar extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    pollForNewBlocks: PropTypes.bool.isRequired
+    rpcUrl: PropTypes.string.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      toggleHamburgerMenu: false
+      toggleHamburgerMenu: false,
+      rpcUrl: props.rpcUrl,
+      formSubmitted: false
     };
   }
 
+  onUrlFormChanged(e) {
+    const rpcUrl = e.target.value;
+    this.setState({ rpcUrl });
+  }
+
+  onUrlFormSubmit(e) {
+    e.preventDefault();
+    if (this.state.rpcUrl === this.props.rpcUrl) {
+      return;
+    }
+
+    this.props.dispatch(setRpcUrl(this.state.rpcUrl));
+    this.setState({ formSubmitted: true });
+    setTimeout(() => {
+      this.setState({ formSubmitted: false });
+    }, 2000);
+  }
+
   render() {
+    const { rpcUrl } = this.props;
+
     return (
       <div className="nav-container nav-contrast-border sticky-nav ">
         <div className="via-1538591159517" via="via-1538591159517" vio="asdf">
@@ -64,29 +88,40 @@ class Navbar extends Component {
                     </NavLink>
                   </div>
                 </div>
-                <div className="col-lg-2 offset-lg-9 order-lg-4">
+
+                <div className="col-lg-6 order-lg-2">
+                  <div className="bar__module pl-3">
+                    <form onSubmit={e => this.onUrlFormSubmit(e)}>
+                      <input
+                        className="url-input type--fade"
+                        type="url"
+                        placeholder={rpcUrl}
+                        value={this.state.rpcUrl}
+                        onChange={e => this.onUrlFormChanged(e)}
+                      />
+                    </form>
+                  </div>
+                </div>
+
+                <div className="col-lg-3 order-lg-2">
                   <div className="bar__module h-100">
-                    <div className="h-100 d-flex flex-column justify-content-center float-right">
-                      {this.props.pollForNewBlocks ? (
-                        <span
-                          className="toggle-polling-btn type--fade type--fine-print"
-                          onClick={() =>
-                            this.props.dispatch(stopBlockSubscription())
-                          }
-                        >
-                          Disable Polling
-                        </span>
-                      ) : (
-                        <span
-                          className="toggle-polling-btn type--bold type--fine-print color--success"
-                          onClick={() =>
-                            this.props.dispatch(subscribeToBlocks())
-                          }
-                        >
-                          Enable Polling
-                        </span>
-                      )}
+                    <div className="h-100 d-flex flex-column justify-content-center">
+                      <CSSTransitionGroup
+                        transitionName="example"
+                        transitionEnterTimeout={300}
+                        transitionLeaveTimeout={700}
+                      >
+                        {this.state.formSubmitted && (
+                          <span className="color--success">Saved!</span>
+                        )}
+                      </CSSTransitionGroup>
                     </div>
+                  </div>
+                </div>
+
+                <div className="col-lg-2 order-lg-4">
+                  <div className="bar__module h-100">
+                    <TogglePollingButton />
                   </div>
                 </div>
               </div>
@@ -99,7 +134,7 @@ class Navbar extends Component {
 }
 
 Navbar = connect(state => ({
-  pollForNewBlocks: state.elph.pollForNewBlocks
+  rpcUrl: state.elph.rpcUrl
 }))(Navbar);
 
 export default Navbar;

@@ -3,6 +3,7 @@ import { delay } from "redux-saga";
 import Elph from "elph-sdk";
 import update from "immutability-helper";
 import createAction from "./_createAction";
+import ElphUtils from "../utils/ElphUtils";
 import {
   lastFetchedBlockNumberSelector,
   blocksSelector,
@@ -11,13 +12,7 @@ import {
   rpcUrlSelector
 } from "./selectors";
 
-// TODO(Sarat): Move this to ELph Utils.
-const ELPH_RPC_URL =
-  process && process.env && process.env.NODE_ENV === "development"
-    ? "http://localhost:5000/rpc"
-    : "https://chain.elph.com/rpc";
-
-let elph = new Elph(ELPH_RPC_URL);
+let elph = new Elph(ElphUtils.getRpcUrl());
 
 const BLOCK_FETCH_INTERVAL = 5000;
 
@@ -62,6 +57,7 @@ function* setRpcUrlSaga() {
   yield takeEvery(SET_RPC_URL, function* handler() {
     console.log("SET RPC URL SAGA");
     const newRpcUrl = yield select(rpcUrlSelector);
+    ElphUtils.setRpcUrl(newRpcUrl);
     elph = new Elph(newRpcUrl);
   });
 }
@@ -185,7 +181,7 @@ export const runExplorerSagas = sagaMiddleware => {
 // -- Reducer --------------------------------------------------------------- //
 
 export const EXPLORER_INITIAL_STATE = {
-  rpcUrl: ELPH_RPC_URL,
+  rpcUrl: ElphUtils.getRpcUrl(),
   txCountSinceVisiting: 0,
   pollForNewBlocks: true,
   lastFetchedBlockNumber: 0,

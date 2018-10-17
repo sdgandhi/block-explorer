@@ -54,10 +54,7 @@ class Home extends PureComponent {
           <div className="row justify-content-between">
             <div className="col-sm-6 col-12">
               <div className="switchable__text mb-5">
-                <h2>
-                  Elph Blockchain
-                  <br className="hidden-xs hidden-sm" /> is super fast
-                </h2>
+                <h2>Elph Testnet</h2>
                 <p className="lead">
                   Transactions since visting: {txCountSinceVisiting}
                   <span className="pl-3 type--fade type--fine-print">
@@ -77,10 +74,7 @@ class Home extends PureComponent {
             </div>
             <div className="col-sm-6 col-12">
               <div className="switchable__text mb-5">
-                <h2>
-                  Ethereum
-                  <br className="hidden-xs hidden-sm" /> is slow
-                </h2>
+                <h2>Ethereum Mainnet</h2>
                 <p className="lead">
                   Transactions since visting: {ethTxCountSinceVisiting}
                   <span className="pl-3 type--fade type--fine-print">

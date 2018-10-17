@@ -55,12 +55,16 @@ class Home extends PureComponent {
             <div className="col-sm-6 col-12">
               <div className="switchable__text mb-5">
                 <h2>Elph Testnet</h2>
-                <p className="lead">
+                <p className="lead mb-0">
                   Transactions since visting: {txCountSinceVisiting}
                   <span className="pl-3 type--fade type--fine-print">
                     ({tps} TPS)
                   </span>
                 </p>
+                <span className="type--fade type--fine-print">
+                  Current Load: {Math.round((tps * 100) / 6000)}
+                  %. Theoretical Max: ~6000 TPS
+                </span>
               </div>
               <CSSTransitionGroup
                 transitionName="example"
@@ -75,12 +79,16 @@ class Home extends PureComponent {
             <div className="col-sm-6 col-12">
               <div className="switchable__text mb-5">
                 <h2>Ethereum Mainnet</h2>
-                <p className="lead">
+                <p className="lead mb-0">
                   Transactions since visting: {ethTxCountSinceVisiting}
                   <span className="pl-3 type--fade type--fine-print">
                     ({ethTps} TPS)
                   </span>
                 </p>
+                <span className="type--fade type--fine-print">
+                  Current Load: {Math.round((ethTps * 100) / 15)}
+                  %. Theoretical Max: ~15 TPS
+                </span>
               </div>
               <CSSTransitionGroup
                 transitionName="example"

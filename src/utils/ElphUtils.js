@@ -1,4 +1,4 @@
-const ELPH_RPC_URL = "http://chain.elph.com/rpc";
+const ELPH_RPC_URL = "https://chain.elph.com:443/rpc";
 const DEV_ELPH_RPC_URL = "http://localhost:5000/rpc";
 const isDev = process && process.env && process.env.NODE_ENV === "development";
 

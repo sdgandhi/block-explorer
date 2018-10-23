@@ -62,7 +62,7 @@ class TxList extends PureComponent {
               </div>
               <div className="col-md-2 col-sm-3 d-none d-sm-block">
                 <p>
-                  <strong className="mr-2">{tx.denomination}</strong>
+                  <strong className="mr-2">{tx.denomination / 10 ** 18}</strong>
                   <span className="type--fade">ETH</span>
                 </p>
               </div>

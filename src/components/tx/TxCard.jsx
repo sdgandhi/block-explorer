@@ -62,7 +62,9 @@ class TxCard extends PureComponent {
                 <div className="col-md-4">
                   <span>
                     <strong className="pr-2">Amount:</strong>
-                    <span className="color--dark">{tx.denomination}</span>
+                    <span className="color--dark">
+                      {tx.denomination / 10 ** 18}
+                    </span>
                     <span className="type--fade type--fine-print pl-1">
                       ETH
                     </span>

@@ -1,0 +1,13 @@
+.login {
+  background: #fafafa;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  .password-form {
+    max-width: 500px;
+    max-height: 500px;
+  }
+  .password-error {
+    min-height: 40px;
+  }
+}

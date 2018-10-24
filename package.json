@@ -1,7 +1,16 @@
 {
   "name": "elph-block-explorer",
   "version": "0.1.0",
-  "private": true,
+  "description": "Block Explorer for Elph Plasma Chain",
+  "keywords": [
+    "blockchain",
+    "cryptocurrency",
+    "ethereum",
+    "plasma",
+    "sidechain"
+  ],
+  "author": "Elph",
+  "license": "MIT",
   "dependencies": {
     "elph-sdk": "../elph-sdk/dist",
     "immutability-helper": "^2.8.1",

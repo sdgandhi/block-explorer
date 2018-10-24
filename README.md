@@ -2,6 +2,10 @@
   <img src="https://s3.amazonaws.com/elph-static/logo.svg" height="85px">
 </a>
 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/elphnetwork/block-explorer/blob/master/LICENSE.txt)
+[![Node Version](https://img.shields.io/badge/node-v8.11.3-brightgreen.svg)](https://nodejs.org/en/)
+[![Telegram](https://img.shields.io/badge/telegram-join%20chat-blue.svg)](https://t.me/elphnetwork)
+
 # [Block Explorer](https://explorer.elph.com)
 
 > Elph Block Explorer is a light weight client application that connects to a specified Elph Plasma Chain. Blocks and transactions that were made on the side chain can be observed.

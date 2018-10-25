@@ -12,7 +12,7 @@
   "author": "Elph",
   "license": "MIT",
   "dependencies": {
-    "elph-sdk": "^0.0.1",
+    "elph-sdk": "^0.0.2",
     "immutability-helper": "^2.8.1",
     "node-sass": "^4.9.3",
     "prop-types": "^15.6.2",

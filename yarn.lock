@@ -3553,10 +3553,10 @@ elliptic@^6.0.0, elliptic@^6.4.0, elliptic@^6.4.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-elph-sdk@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/elph-sdk/-/elph-sdk-0.0.1.tgz#e6d189c0c736e9203c71ff0fc34c4592da605fa1"
-  integrity sha512-s///r0SI82pRPFpFtmY06OaViMO9C3+Xc9YFodPb01MRJKbGYi8mnTSdrD1ZaiFP67FKzT023/QCuPs9m9G74A==
+elph-sdk@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/elph-sdk/-/elph-sdk-0.0.2.tgz#b2463080cecd03f0759abaed07efe5e98b313494"
+  integrity sha512-B2QB4Nk8dQF+ccnOWgGrVAJG3b79c91qxmfSdLH9+AuCqlK5FEe8+9MxAx8CT4KrUOOKyQKu+NZmMZ6seXdXwQ==
   dependencies:
     elliptic "^6.4.1"
     jayson "^2.0.6"

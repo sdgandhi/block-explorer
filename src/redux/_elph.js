@@ -12,7 +12,10 @@ import {
   rpcUrlSelector
 } from "./selectors";
 
-let elph = new Elph({'url': ElphUtils.getRpcUrl()});
+let elph = new Elph({
+  url: ElphUtils.getRpcUrl(),
+  key: "0xa18969817c2cefadf52b93eb20f917dce760ce13b2ac9025e0361ad1e7a1d448"
+});
 
 const BLOCK_FETCH_INTERVAL = 5000;
 
@@ -29,27 +32,18 @@ const RECORD_FETCH_FAILURE_BLOCKS = "RECORD_FETCH_FAILURE_BLOCKS";
 // -- Actions --------------------------------------------------------------- //
 
 export const setRpcUrl = rpcUrl => createAction(SET_RPC_URL, { rpcUrl });
-export const fetchBlock = blockNumber =>
-  createAction(FETCH_BLOCK, { blockNumber });
-const fetchingBlock = blockNumber =>
-  createAction(FETCHING_BLOCK, { blockNumber });
+export const fetchBlock = blockNumber => createAction(FETCH_BLOCK, { blockNumber });
+const fetchingBlock = blockNumber => createAction(FETCHING_BLOCK, { blockNumber });
 export const subscribeToBlocks = () => createAction(SUBSCRIBE_TO_BLOCKS);
-export const stopBlockSubscription = () =>
-  createAction(STOP_BLOCK_SUBSCRIPTION);
-const recordFetchedBlocks = (
-  blocks,
-  txns,
-  lastFetchedBlockNumber,
-  newTxCount = 0
-) =>
+export const stopBlockSubscription = () => createAction(STOP_BLOCK_SUBSCRIPTION);
+const recordFetchedBlocks = (blocks, txns, lastFetchedBlockNumber, newTxCount = 0) =>
   createAction(RECORD_FETCHED_BLOCKS, {
     blocks,
     txns,
     lastFetchedBlockNumber,
     newTxCount
   });
-const recordFetchFailureBlocks = blockNumbers =>
-  createAction(RECORD_FETCH_FAILURE_BLOCKS, { blockNumbers });
+const recordFetchFailureBlocks = blockNumbers => createAction(RECORD_FETCH_FAILURE_BLOCKS, { blockNumbers });
 
 // -- Sagas --------------------------------------------------------------- //
 
@@ -98,14 +92,10 @@ function* fetchBlockSaga() {
       }
 
       yield put(fetchingBlock(blockNumber));
-      const lastFetchedBlockNumber = yield select(
-        lastFetchedBlockNumberSelector
-      );
+      const lastFetchedBlockNumber = yield select(lastFetchedBlockNumberSelector);
       const blockResponse = yield call(elph.getBlock, blockNumber);
       const { newBlocks, newTxns } = parseBlocksResponse([blockResponse]);
-      yield put(
-        recordFetchedBlocks(newBlocks, newTxns, lastFetchedBlockNumber)
-      );
+      yield put(recordFetchedBlocks(newBlocks, newTxns, lastFetchedBlockNumber));
     } catch (e) {
       // TODO(Sarat): Be able to distinguish between network errors and other errors.
       console.error(e);
@@ -137,20 +127,12 @@ function* pollForNewBlocks() {
       const { newBlocks, newTxns } = parseBlocksResponse(blocksList);
 
       // Calculate the new watermark based on the latest block that was returned.
-      const latestBlockNumber = Math.max(
-        lastFetchedBlockNumber,
-        ...Object.keys(newBlocks)
-      );
+      const latestBlockNumber = Math.max(lastFetchedBlockNumber, ...Object.keys(newBlocks));
 
       // Calculate the number of new transactions added.
-      const newTxCount = Object.values(newBlocks).reduce(
-        (total, block) => total + block.txCount,
-        0
-      );
+      const newTxCount = Object.values(newBlocks).reduce((total, block) => total + block.txCount, 0);
 
-      yield put(
-        recordFetchedBlocks(newBlocks, newTxns, latestBlockNumber, newTxCount)
-      );
+      yield put(recordFetchedBlocks(newBlocks, newTxns, latestBlockNumber, newTxCount));
 
       yield call(delay, BLOCK_FETCH_INTERVAL);
     } catch (e) {

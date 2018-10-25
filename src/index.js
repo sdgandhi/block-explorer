@@ -6,7 +6,7 @@ import "./styles/global/iconsmind.css";
 import "./styles/global/stack-interface.css";
 import "./styles/global/theme-aqua.css";
 import "./styles/global/custom.css";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
@@ -15,6 +15,7 @@ import App from "./components/App.jsx";
 import rootReducer from "./redux/rootReducer";
 import runSagas from "./redux/sagas";
 import ElphUtils from "./utils/ElphUtils";
+import withTracker, { initializeTracker } from "./utils/analytics";
 
 if (!ElphUtils.isDev()) {
   const noop = () => {};
@@ -41,10 +42,15 @@ const store = createStore(
 
 runSagas(sagaMiddleware);
 
+// Setup analytics.
+initializeTracker();
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <Switch>
+        <Route path="/" component={withTracker(App)} />
+      </Switch>
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")

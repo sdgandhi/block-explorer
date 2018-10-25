@@ -4,6 +4,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/elphnetwork/block-explorer/blob/master/LICENSE.txt)
 [![Node Version](https://img.shields.io/badge/node-v8.11.3-brightgreen.svg)](https://nodejs.org/en/)
+[![Travis (.org)](https://img.shields.io/travis/elphnetwork/block-explorer.svg)](https://travis-ci.org/elphnetwork/block-explorer)
 [![Telegram](https://img.shields.io/badge/telegram-join%20chat-blue.svg)](https://t.me/elphnetwork)
 
 # [Block Explorer](https://explorer.elph.com)

@@ -14,6 +14,15 @@ import * as serviceWorker from "./serviceWorker";
 import App from "./components/App.jsx";
 import rootReducer from "./redux/rootReducer";
 import runSagas from "./redux/sagas";
+import ElphUtils from "./utils/ElphUtils";
+
+if (!ElphUtils.isDev()) {
+  const noop = () => {};
+  console.log = noop;
+  console.info = noop;
+  console.error = noop;
+  console.warn = noop;
+}
 
 // Setup Redux store and sagas.
 const sagaMiddleware = createSagaMiddleware();

@@ -3,6 +3,8 @@ const DEV_ELPH_RPC_URL = "http://localhost:5000/rpc";
 const isDev = process && process.env && process.env.NODE_ENV === "development";
 
 const ElphUtils = {
+  isDev: () => isDev,
+
   getOriginUrl: () => window.location.origin,
 
   getRpcUrl: () => {

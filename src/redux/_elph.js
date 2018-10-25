@@ -12,7 +12,7 @@ import {
   rpcUrlSelector
 } from "./selectors";
 
-let elph = new Elph(ElphUtils.getRpcUrl());
+let elph = new Elph({'url': ElphUtils.getRpcUrl()});
 
 const BLOCK_FETCH_INTERVAL = 5000;
 
@@ -55,7 +55,6 @@ const recordFetchFailureBlocks = blockNumbers =>
 
 function* setRpcUrlSaga() {
   yield takeEvery(SET_RPC_URL, function* handler() {
-    console.log("SET RPC URL SAGA");
     const newRpcUrl = yield select(rpcUrlSelector);
     ElphUtils.setRpcUrl(newRpcUrl);
     elph = new Elph(newRpcUrl);
@@ -83,7 +82,6 @@ const parseBlocksResponse = blocksList => {
 
 function* fetchBlockSaga() {
   yield takeEvery(FETCH_BLOCK, function* handler(action) {
-    console.log("FETCH BLOCK SAGA", action);
     const blockNumber = Number(action.payload.blockNumber);
 
     try {
@@ -99,7 +97,6 @@ function* fetchBlockSaga() {
         return;
       }
 
-      console.log("Fetching block: ", blockNumber);
       yield put(fetchingBlock(blockNumber));
       const lastFetchedBlockNumber = yield select(
         lastFetchedBlockNumberSelector
@@ -167,7 +164,6 @@ function* pollForNewBlocks() {
 
 function* subscribeToBlocksSaga() {
   yield takeEvery(SUBSCRIBE_TO_BLOCKS, function* handler() {
-    console.log("SUBSCRIBE TO BLOCKS SAGA");
     yield call(pollForNewBlocks);
   });
 }

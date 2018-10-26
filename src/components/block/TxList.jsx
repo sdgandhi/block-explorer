@@ -74,13 +74,9 @@ class TxList extends PureComponent {
               </div>
               <div className="col-md-2 col-sm-2 col-4">
                 {tx.spent ? (
-                  <p className="float-right type--fine-print color--success">
-                    Spent!
-                  </p>
+                  <p className="float-right type--fine-print color--success">Spent!</p>
                 ) : (
-                  <p className="float-right type--fine-print type--fade">
-                    Unspent
-                  </p>
+                  <p className="float-right type--fine-print type--fade">Unspent</p>
                 )}
               </div>
             </div>

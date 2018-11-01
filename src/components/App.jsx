@@ -9,20 +9,11 @@ import BlockDetails from "./block/BlockDetails.jsx";
 import TxDetails from "./tx/TxDetails.jsx";
 import { subscribeToBlocks } from "../redux/_elph";
 import { subscribeToEthBlocks } from "../redux/_eth.js";
-import AuthUtils from "../utils/AuthUtils.js";
-import Login from "./Login.jsx";
 
 class App extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: AuthUtils.isLoggedIn()
-    };
-  }
 
   componentDidMount() {
     this.props.dispatch(subscribeToBlocks());
@@ -30,10 +21,6 @@ class App extends Component {
   }
 
   render() {
-    if (!this.state.loggedIn) {
-      return <Login login={password => this.setState({ loggedIn: AuthUtils.login(password) })} />;
-    }
-
     return (
       <div className="App">
         <Navbar />

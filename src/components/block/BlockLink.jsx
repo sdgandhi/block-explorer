@@ -5,7 +5,7 @@ import Link from "react-router-dom/Link";
 
 class BlockLink extends PureComponent {
   static propTypes = {
-    blockNumber: PropTypes.number.isRequired
+    blockNumber: PropTypes.string.isRequired
   };
 
   render() {

@@ -77,6 +77,7 @@ const parseBlocksResponse = blocksList => {
 function* fetchBlockSaga() {
   yield takeEvery(FETCH_BLOCK, function* handler(action) {
     const blockNumber = Number(action.payload.blockNumber);
+    console.log("FETCH_BLOCK:", blockNumber);
 
     try {
       // Don't fetch the block if it is already fetched.

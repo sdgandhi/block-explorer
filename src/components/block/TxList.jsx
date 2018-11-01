@@ -7,7 +7,7 @@ import { fetchBlock } from "../../redux/_elph";
 
 const getAmount = tx => {
   const amount = tx.denomination / 10 ** 18;
-  return Math.round(amount * 10000) / 10000;
+  return amount;
 };
 
 class TxList extends PureComponent {

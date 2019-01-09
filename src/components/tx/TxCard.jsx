@@ -32,11 +32,17 @@ class TxCard extends PureComponent {
           <div className="card card-1 boxed boxed--sm boxed--border">
             <div className="card__top">
               <div className="card__avatar">
-                <img alt="logo symbol" src={logoSymbol} />
+                <img
+                  alt="logo symbol"
+                  className="logo-symbol"
+                  src={logoSymbol}
+                />
                 <span>
                   <h4 className="d-inline">
                     Transaction
-                    <span className="pl-2 type--fade type--fine-print">({spentText})</span>
+                    <span className="pl-2 type--fade type--fine-print">
+                      ({spentText})
+                    </span>
                   </h4>
                 </span>
               </div>
@@ -52,14 +58,20 @@ class TxCard extends PureComponent {
               <p className="type--fade type--fine-print tx-hex">{tx.hash}</p>
 
               <strong>Owner:</strong>
-              <code className="d-block type--fine-print pb-5">{tx.newOwner}</code>
+              <code className="d-block type--fine-print pb-5">
+                {tx.newOwner}
+              </code>
 
               <div className="row px-3 px-sm-3 px-md-0">
                 <div className="col-md-4">
                   <span>
                     <strong className="pr-2">Amount:</strong>
-                    <span className="color--dark">{tx.denomination / 10 ** 18}</span>
-                    <span className="type--fade type--fine-print pl-1">ETH</span>
+                    <span className="color--dark">
+                      {tx.denomination / 10 ** 18}
+                    </span>
+                    <span className="type--fade type--fine-print pl-1">
+                      ETH
+                    </span>
                   </span>
                 </div>
                 <div className="col-md-4">
@@ -77,7 +89,10 @@ class TxCard extends PureComponent {
                 <li className="list-inline-item">
                   <div className="card__action">
                     <i className="icon-Link" />
-                    <CopyToClipboardButton textToCopy={absoluteTxUrl} title="Copy Link" />
+                    <CopyToClipboardButton
+                      textToCopy={absoluteTxUrl}
+                      title="Copy Link"
+                    />
                   </div>
                 </li>
               </ul>

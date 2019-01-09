@@ -38,12 +38,20 @@ class BlockCard extends PureComponent {
       <div className="card card-1 boxed boxed--sm boxed--border">
         <div className="card__top">
           <div className="card__avatar">
-            {eth ? <img alt="logo symbol" src={ethLogoSymbol} /> : <img alt="logo symbol" src={logoSymbol} />}
+            {eth ? (
+              <img alt="logo symbol" src={ethLogoSymbol} />
+            ) : (
+              <img alt="logo symbol" className="logo-symbol" src={logoSymbol} />
+            )}
             <h4 className="block-number">
               <span className="mr-2">Block</span>
 
               {eth ? (
-                <a target="_blank" rel="noopener noreferrer" href={etherscanUrl}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={etherscanUrl}
+                >
                   <code className="type--bold">#{block.number}</code>
                 </a>
               ) : (
@@ -78,11 +86,19 @@ class BlockCard extends PureComponent {
               <div className="card__action">
                 <i className="icon-Link" />
                 {eth ? (
-                  <a className="pl-2 color--grey" target="_blank" rel="noopener noreferrer" href={etherscanUrl}>
+                  <a
+                    className="pl-2 color--grey"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={etherscanUrl}
+                  >
                     View on Etherscan
                   </a>
                 ) : (
-                  <CopyToClipboardButton textToCopy={absoluteBlockUrl} title="Copy Link" />
+                  <CopyToClipboardButton
+                    textToCopy={absoluteBlockUrl}
+                    title="Copy Link"
+                  />
                 )}
               </div>
             </li>

@@ -1,6 +1,9 @@
 /* Increase logo size a little bit */
 .bar .logo {
-  max-height: 2.78571429em;
+  max-height: 3.78571429em;
+  height: 45px;
+  margin-left: -6px;
+  margin-top: -7px;
 }
 
 .example-enter {
@@ -23,4 +26,8 @@
   opacity: 0.01;
   height: 0%;
   transition: 700ms;
+}
+
+.container .row {
+  align-items: center;
 }
